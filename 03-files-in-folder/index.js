@@ -14,7 +14,7 @@ fs.readdir (folder, {withFileTypes: true}, (error, dirEntList) => {
             throw error
           }
           else{
-            console.log(`${path.parse(path.join(`${folder}/${dirEnt.name}`)).name} - ${path.extname(path.join(`${folder}/${dirEnt.name}`))} - ${stats['size']} bite`); 
+            console.log(`${path.parse(path.join(`${folder}/${dirEnt.name}`)).name} - ${path.extname(path.join(`${folder}/${dirEnt.name}`)).replace('.', '')} - ${stats['size']} bite`); 
           }
           });
               
