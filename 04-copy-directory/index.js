@@ -1,32 +1,31 @@
 const fs = require('fs');
 const path = require('path');
-const mkdir = require('fs');
-const copyFile = require('fs');
 const { error } = require('console');
-const folder = path.join(__dirname, 'files');
 
-function copyDir () {
-  fs.mkdir(path.join(__dirname, 'files-copy'),{recursive: true}, (error) => {
-    if(error) {
-      throw error;
-    }
-    console.log('folder added')
-  })
-  fs.readdir(folder, (error, files) => {
-    if(error){
-      throw error;
-    }
-    else{  
-    files.forEach((file) => {
-        fs.promises.copyFile(path.join(__dirname, 'files', file), path.join(__dirname, 'files-copy', file));
-    })
-
-}})
-  
-  }
-  copyDir();
-
-  
-
-
-
+(function copyDir () {
+  const folder = path.resolve(__dirname, 'files');
+  const copyfolder = path.resolve(__dirname, 'files-copy');
+  try {
+    fs.rm (copyfolder, {recursive: true, force: true}, ()=> {
+      fs.mkdir(path.join(__dirname, 'files-copy'), () => {
+        fs.readdir(folder, {withFileTypes: true}, (error, files) => {
+          if(error) {
+            throw error;
+          }
+            files.forEach((file) => {
+              if(file.isFile()) {
+                fs.copyFile(path.join(__dirname, 'files', file.name), path.join(__dirname, 'files-copy', file.name), (error) => {
+                  if(error) {
+                    throw error;
+                  }
+                });
+              }
+            });
+          });
+        });
+      });
+    } 
+      catch(err) { 
+        console.log(err)
+      }
+  })();
